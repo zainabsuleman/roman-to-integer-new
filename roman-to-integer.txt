@@ -1,4 +1,4 @@
-class RomanNumeral:   
+class RomanNumeral:
     def __init__(self):
         self.map = {
             'I': 1,
@@ -13,31 +13,37 @@ class RomanNumeral:
     def roman_to_int(self, s):
         if not s:
             raise ValueError("Input is empty. Please provide a valid Roman numeral.")
-        
+
         converted_number = 0
+        s = s.upper() 
         for i in range(len(s)):
             if s[i] not in self.map:
-                raise ValueError(f"Invalid Roman numeral: {s[i]}")
-            
+                raise ValueError("Invalid Roman numeral at position {}: {}".format(i, s[i]))
+
             current_number = self.map[s[i]]
             next_number = self.map[s[i + 1]] if i + 1 < len(s) else 0
-            
+
             if current_number >= next_number:
                 converted_number += current_number
             else:
                 converted_number -= current_number
-        
+
+        # Check if the converted number exceeds the maximum allowed value
+        if converted_number > 3999:
+            raise ValueError("Roman numeral exceeds the maximum allowed value of 3999.")
+
         return converted_number
 
 
 def main():
     roman_numeral = RomanNumeral()
-    
+
     try:
-        result = roman_numeral.roman_to_int("XXIV")
+        result = roman_numeral.roman_to_int("")
         print("Conversion result:", result)
     except ValueError as e:
         print(f"Error: {e}")
+
 
 import unittest
 
@@ -45,6 +51,7 @@ class TestRomanNumeralConversion(unittest.TestCase):
 
     def test_single_letters(self):
         roman_numeral = RomanNumeral()
+        # Test case for each single Roman numeral
         self.assertEqual(1, roman_numeral.roman_to_int("I"))
         self.assertEqual(5, roman_numeral.roman_to_int("V"))
         self.assertEqual(10, roman_numeral.roman_to_int("X"))
@@ -55,43 +62,53 @@ class TestRomanNumeralConversion(unittest.TestCase):
 
     def test_many_letters_in_order(self):
         roman_numeral = RomanNumeral()
+        # Test case for a sequence of Roman numerals in order
         self.assertEqual(11, roman_numeral.roman_to_int("XI"))
 
     def test_subtractive_notation(self):
         roman_numeral = RomanNumeral()
+        # Test case for subtractive notation
         self.assertEqual(4, roman_numeral.roman_to_int("IV"))
 
     def test_with_and_without_subtractive_notation(self):
         roman_numeral = RomanNumeral()
+        # Test cases with and without subtractive notation
         self.assertEqual(14, roman_numeral.roman_to_int("XIV"))
         self.assertEqual(10, roman_numeral.roman_to_int("X"))
 
     def test_repetition(self):
         roman_numeral = RomanNumeral()
+        # Test case for repetition of Roman numerals
         self.assertEqual(2, roman_numeral.roman_to_int("II"))
 
     def test_first_number(self):
         roman_numeral = RomanNumeral()
+        # Test case for the first Roman numeral
         self.assertEqual(1, roman_numeral.roman_to_int("I"))
 
     def test_invalid_letter(self):
         roman_numeral = RomanNumeral()
+        # Test case for an invalid Roman numeral
         with self.assertRaises(ValueError):
             roman_numeral.roman_to_int("Z")
 
     def test_invalid_and_valid_letter(self):
         roman_numeral = RomanNumeral()
+        # Test case for a mix of invalid and valid Roman numerals
         with self.assertRaises(ValueError):
             roman_numeral.roman_to_int("XIZ")
 
     def test_not_valid(self):
         roman_numeral = RomanNumeral()
+        # Test case for an invalid Roman numeral
         with self.assertRaises(ValueError):
             roman_numeral.roman_to_int("VV")
 
     def test_null(self):
         roman_numeral = RomanNumeral()
+        # Test case for an empty string
         self.assertEqual(0, roman_numeral.roman_to_int(""))
+
 
 if __name__ == "__main__":
     main()
